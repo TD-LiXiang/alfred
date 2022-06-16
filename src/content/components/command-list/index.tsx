@@ -1,5 +1,6 @@
 import { Avatar, List, Row, Col } from "antd"
 import { Command } from "../../typings"
+import { isFunction } from "../../utils"
 
 interface Props {
   commands: Command[]
@@ -10,7 +11,7 @@ export const CommandList = (props: Props): JSX.Element => {
   const { commands, onExecuteCommand } = props
 
   const handelSelectCommand = (item: Command) => () => {
-    if (typeof item === "function") {
+    if (isFunction(onExecuteCommand)) {
       onExecuteCommand(item)
     }
   }
