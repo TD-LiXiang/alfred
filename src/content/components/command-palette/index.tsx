@@ -16,6 +16,7 @@ export const CommandPalette = (props: Props): JSX.Element => {
 
   return (
     <Modal
+      bodyStyle={{ overflowY: "auto", maxHeight: "calc(100vh - 400px)" }}
       title={<SearchBar onSave={onSave} />}
       visible={visible}
       footer={null}

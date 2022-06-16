@@ -1,7 +1,8 @@
 import { Input } from "antd"
 import type { ChangeEvent } from "react"
-import { useEffect, useRef, startTransition } from "react"
+import { useRef, startTransition } from "react"
 import debounce from "lodash.debounce"
+import { isFunction } from "../../utils"
 
 interface Props {
   onSave: (keywords: string) => void
@@ -14,14 +15,15 @@ export const SearchBar = (props: Props): JSX.Element => {
 
   const inputRef = useRef(null)
 
-  useEffect(() => {
-    inputRef.current!.focus({
-      cursor: "start",
-    })
-  }, [])
+  //TODO:default not focus
+  // useEffect(() => {
+  //   inputRef.current!.focus({
+  //     cursor: "start",
+  //   })
+  // }, [])
 
   const handleChange = debounce((e: ChangeEvent<HTMLInputElement>) => {
-    if (typeof onSave === "function") {
+    if (isFunction(onSave)) {
       startTransition(() => {
         onSave(e.target.value.trim())
       })
