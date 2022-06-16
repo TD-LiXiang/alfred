@@ -1,12 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React, { Suspense } from "react"
+import ReactDOM from "react-dom/client"
+import { App } from "./App"
 
-const root = document.createElement('root')
-root.id = 'alfred-root'
+import "antd/dist/antd.css"
+
+const root = document.createElement("root")
+root.id = "alfred-root"
 document.body.appendChild(root)
 
 ReactDOM.createRoot(root).render(
-  <React.StrictMode>
-    <div>Hello World</div>
-  </React.StrictMode>
+  <Suspense fallback={<></>}>
+    <App />
+  </Suspense>
 )
