@@ -7,11 +7,12 @@ import { isFunction } from "../../utils"
 import "./index.css"
 interface Props {
   instants: Instant[]
+  keyword:string
   onExecuteInstant: (Instant: Instant) => void
 }
 
 export const InstantList = (props: Props): JSX.Element => {
-  const { instants, onExecuteInstant } = props
+  const { instants,keyword, onExecuteInstant } = props
 
   const [selectInstant,setSeletInstant]=useState<Instant>(null)
 
@@ -61,19 +62,12 @@ export const InstantList = (props: Props): JSX.Element => {
     }
   }, [ handelEnterInstant, instants, selectInstant])
 
+  const formatTitle=(title)=>{
+    return title.replace(new RegExp(keyword,'i'),`<span style="color:red">${keyword}</span>`)
+  }
+
   return (
     <>
-      {/* {instants.length > 0 ? (
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: "18px" }}
-        >
-          <Col>Commands</Col>
-          <Col>Type shortcut Key to execute</Col>
-        </Row>
-      ) : null} */}
-
       <List
         size="small"
         itemLayout="horizontal"
@@ -82,8 +76,7 @@ export const InstantList = (props: Props): JSX.Element => {
         renderItem={(item) => (
           <List.Item onClick={handelSelectInstant(item)}  onDoubleClick={handelCommitInstant(item)} style={selectInstant===item?{backgroundColor: 'rgba(0, 0, 0, 0.04)'}:{}}>
             <List.Item.Meta
-              // avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-              title={item.title}
+              title={<span dangerouslySetInnerHTML={{__html: formatTitle(item.title)}} ></span>}
               description={item.section_or_topic}
             />
           </List.Item>
