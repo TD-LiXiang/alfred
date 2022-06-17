@@ -1,18 +1,18 @@
 import { Modal } from "antd"
 import { SearchBar } from "../search-bar"
-import { CommandList } from "../command-list"
-import { Command } from "../../typings"
+import { InstantList } from "../command-list"
+import Instant from "../../models/Instant"
 
 interface Props {
   visible: boolean
-  commands: Command[]
-  onSave: (keyword: string) => void
+  commands: Instant[]
+  onSave: (keywords: string) => void
   onClosePalette: () => void
-  onExecuteCommand: (command: Command) => void
+  onExecuteInstant: (instant: Instant) => void
 }
 
 export const CommandPalette = (props: Props): JSX.Element => {
-  const { visible, commands, onSave, onClosePalette, onExecuteCommand } = props
+  const { visible, commands, onSave, onClosePalette, onExecuteInstant: onExecuteCommand } = props
 
   return (
     <Modal
@@ -24,7 +24,7 @@ export const CommandPalette = (props: Props): JSX.Element => {
       closable={false}
       mask={false}
     >
-      <CommandList commands={commands} onExecuteCommand={onExecuteCommand} />
+      <InstantList instants={commands} onExecuteInstant={onExecuteCommand} />
     </Modal>
   )
 }
