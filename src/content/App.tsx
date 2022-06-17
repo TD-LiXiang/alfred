@@ -43,17 +43,13 @@ export const App = (): JSX.Element => {
     }
   }, [])
 
-  return (
-    <>
-      {visible ? (
-        <CommandPalette
-          visible
-          commands={selectedCommands}
-          onSave={handleOnSave}
-          onClosePalette={onClosePalette}
-          onExecuteCommand={onExecuteCommand}
-        />
-      ) : null}
-    </>
-  )
+  return visible ? (
+    <CommandPalette
+      visible
+      commands={selectedCommands}
+      onSave={handleOnSave}
+      onClosePalette={onClosePalette}
+      onExecuteCommand={onExecuteCommand}
+    />
+  ) : null
 }

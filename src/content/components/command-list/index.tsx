@@ -10,11 +10,13 @@ interface Props {
 export const CommandList = (props: Props): JSX.Element => {
   const { commands, onExecuteCommand } = props
 
-  const handelSelectCommand = (item: Command) => () => {
-    if (isFunction(onExecuteCommand)) {
-      onExecuteCommand(item)
+  const handelSelectCommand =
+    (item: Command): (() => void) =>
+    (): void => {
+      if (isFunction(onExecuteCommand)) {
+        onExecuteCommand(item)
+      }
     }
-  }
 
   return (
     <>

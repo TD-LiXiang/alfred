@@ -6,7 +6,7 @@ import { Command } from "../../typings"
 interface Props {
   visible: boolean
   commands: Command[]
-  onSave: (keywords: string) => void
+  onSave: (keyword: string) => void
   onClosePalette: () => void
   onExecuteCommand: (command: Command) => void
 }
