@@ -5,14 +5,15 @@ import Instant from "../../models/Instant"
 
 interface Props {
   visible: boolean
-  commands: Instant[]
+  instants: Instant[]
+  keyword:string
   onSave: (keywords: string) => void
   onClosePalette: () => void
   onExecuteInstant: (instant: Instant) => void
 }
 
 export const CommandPalette = (props: Props): JSX.Element => {
-  const { visible, commands, onSave, onClosePalette, onExecuteInstant: onExecuteCommand } = props
+  const { visible, instants,keyword, onSave, onClosePalette, onExecuteInstant: onExecuteCommand } = props
 
   return (
     <Modal
@@ -24,7 +25,7 @@ export const CommandPalette = (props: Props): JSX.Element => {
       closable={false}
       mask={false}
     >
-      <InstantList instants={commands} onExecuteInstant={onExecuteCommand} />
+      <InstantList keyword={keyword} instants={instants} onExecuteInstant={onExecuteCommand} />
     </Modal>
   )
 }

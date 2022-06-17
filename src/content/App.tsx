@@ -133,7 +133,10 @@ export const App = (): JSX.Element => {
 
   const [filterInstants,setFilterInstants]=useState<Instant[]>([])
 
+  const [keyword,setKeyword]=useState('')
+
   const handleOnSave = (keyword: string): void => {
+    setKeyword(keyword)
     const filterInstants=instants.filter(
       (instant) => (instant.title.indexOf(keyword)!==-1)
     )
@@ -169,7 +172,8 @@ export const App = (): JSX.Element => {
   return visible ? (
     <CommandPalette
       visible
-      commands={filterInstants}
+      keyword={keyword}
+      instants={filterInstants}
       onSave={handleOnSave}
       onClosePalette={onClosePalette}
       onExecuteInstant={onExecuteInstant}
