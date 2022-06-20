@@ -1,57 +1,75 @@
-import {  List } from "antd"
+import { List } from "antd"
 import { useCallback, useEffect, useState } from "react"
 import { bufferCount, fromEvent, pluck } from "rxjs"
-import Instant from "../../models/Instant"
+import type Instant from "../../types/Instant"
 import { isFunction } from "../../utils"
 
-import "./index.css"
+import styles from "./index.module.scss"
+
 interface Props {
   instants: Instant[]
-  keyword:string
+  keyword: string
   onExecuteInstant: (Instant: Instant) => void
 }
 
+const formatTitle = (title: string, keyword: string): string => {
+  if (!keyword) return title
+
+  return title.replace(
+    new RegExp(keyword, "i"),
+    `<span style="color:red">${keyword}</span>`
+  )
+}
+
 export const InstantList = (props: Props): JSX.Element => {
-  const { instants,keyword, onExecuteInstant } = props
+  const { instants, keyword, onExecuteInstant } = props
 
-  const [selectInstant,setSeletInstant]=useState<Instant>(null)
+  const [selectInstant, setSelectInstant] = useState<Instant>(null)
 
-  const handelCommitInstant = (item: Instant) =>()=>{
-    if (item&&isFunction(onExecuteInstant)) {
-      onExecuteInstant(item)
+  const doubleClickTriggerInstant =
+    (item: Instant): (() => void) =>
+    (): void => {
+      if (item && isFunction(onExecuteInstant)) {
+        onExecuteInstant(item)
+      }
     }
-  }
 
-  const handelEnterInstant = useCallback(()=> {
-    if (selectInstant&&isFunction(onExecuteInstant)) {
+  const handelEnterInstant = useCallback((): void => {
+    if (selectInstant && isFunction(onExecuteInstant)) {
       onExecuteInstant(selectInstant)
     }
-  },[onExecuteInstant, selectInstant])
+  }, [onExecuteInstant, selectInstant])
 
-  const handelSelectInstant=(item:Instant)=>()=>{
-    setSeletInstant(item)
-  }
+  const handelSelectInstant =
+    (item: Instant): (() => void) =>
+    () => {
+      setSelectInstant(item)
+    }
 
   useEffect(() => {
     const $event = fromEvent(document, "keydown")
       .pipe(pluck("key"), bufferCount(1))
       .subscribe((keys) => {
         if (keys.join("") === "ArrowDown") {
-          if(selectInstant){
-            const selIndex=instants.findIndex((item)=>selectInstant===item)
-            if(selIndex<instants.length-1){
-              setSeletInstant(instants[selIndex+1])
+          if (selectInstant) {
+            const selIndex = instants.findIndex(
+              (item) => selectInstant.title === item.title
+            )
+            if (selIndex < instants.length - 1) {
+              setSelectInstant(instants[selIndex + 1])
             }
           }
-        } else if(keys.join("") === "ArrowUp"){
-          if(selectInstant){
-            const selIndex=instants.findIndex((item)=>selectInstant===item)
-            if(selIndex>0){
-              setSeletInstant(instants[selIndex-1])
+        } else if (keys.join("") === "ArrowUp") {
+          if (selectInstant) {
+            const selIndex = instants.findIndex(
+              (item) => selectInstant.title === item.title
+            )
+            if (selIndex > 0) {
+              setSelectInstant(instants[selIndex - 1])
             }
           }
-        }else if(keys.join("") ==="Enter"){
-          if(selectInstant){
+        } else if (keys.join("") === "Enter") {
+          if (selectInstant) {
             handelEnterInstant()
           }
         }
@@ -60,11 +78,7 @@ export const InstantList = (props: Props): JSX.Element => {
     return () => {
       $event.unsubscribe()
     }
-  }, [ handelEnterInstant, instants, selectInstant])
-
-  const formatTitle=(title)=>{
-    return title.replace(new RegExp(keyword,'i'),`<span style="color:red">${keyword}</span>`)
-  }
+  }, [handelEnterInstant, instants, selectInstant])
 
   return (
     <>
@@ -74,9 +88,24 @@ export const InstantList = (props: Props): JSX.Element => {
         dataSource={instants}
         locale={{ emptyText: "no available command" }}
         renderItem={(item) => (
-          <List.Item onClick={handelSelectInstant(item)}  onDoubleClick={handelCommitInstant(item)} style={selectInstant===item?{backgroundColor: 'rgba(0, 0, 0, 0.04)'}:{}}>
+          <List.Item
+            className={styles.itemHover}
+            onClick={handelSelectInstant(item)}
+            onDoubleClick={doubleClickTriggerInstant(item)}
+            style={
+              selectInstant.title === item.title
+                ? { backgroundColor: "rgba(0, 0, 0, 0.04)" }
+                : {}
+            }
+          >
             <List.Item.Meta
-              title={<span dangerouslySetInnerHTML={{__html: formatTitle(item.title)}} ></span>}
+              title={
+                <span
+                  dangerouslySetInnerHTML={{
+                    __html: formatTitle(item.title, keyword),
+                  }}
+                ></span>
+              }
               description={item.section_or_topic}
             />
           </List.Item>

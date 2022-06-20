@@ -1,4 +1,4 @@
-import { Command } from "../typings"
+import { Command } from "../types"
 
 export const commands: Command[] = [
   {
